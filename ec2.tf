@@ -58,7 +58,7 @@ resource "aws_instance" "private1_instance" {
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.private_sub1.id
   key_name               = aws_key_pair.my_key.key_name
-  vpc_security_group_ids = [aws_security_group.my_sg.id]
+  vpc_security_group_ids = [aws_security_group.ec2-bastion-sg.id]
 #  user_data              = file("nginx.sh")
 
 
@@ -95,7 +95,7 @@ resource "aws_instance" "private2_instance" {
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.private_sub2.id
   key_name               = aws_key_pair.my_key.key_name
-  vpc_security_group_ids = [aws_security_group.my_sg.id]
+  vpc_security_group_ids = [aws_security_group.ec2-bastion-sg.id]
 #  user_data              = file("nginx.sh")
 
 

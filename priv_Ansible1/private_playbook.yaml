@@ -1,0 +1,68 @@
+---
+- name: Install Docker and run NGINX as a container
+  hosts: all
+  become: yes
+  tasks:
+
+    - name: Update apt packages
+      apt:
+        update_cache: yes
+
+    - name: Install prerequisite packages
+      apt:
+        name: 
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      apt_repository:
+       repo: deb https://download.docker.com/linux/ubuntu focal stable
+       state: present
+                                
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: present
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Pull NGINX Docker image
+      docker_image:
+        name: nginx
+        source: pull
+
+    - name: Run NGINX container
+      docker_container:
+        name: nginx
+        image: nginx
+        state: started
+        ports:
+          - "8080:80"
+            
+                 
+           
+#     - name: install docker
+#       command: "bash docker.sh" 
+
+
+#     - name: run nginx as a container               
+#       command: "sudo docker run -d -p80:80 nginx"       
+

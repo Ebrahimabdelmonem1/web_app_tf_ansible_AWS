@@ -1,0 +1,45 @@
+---
+- name: Copy private key, inventory, config, and playbook to EC2 and run the playbook
+  hosts: BH1
+  tasks:
+    - name: Copy private key to EC2
+      ansible.builtin.copy:
+        src: ~/semi_final_project/AWS-LB-Terraform/pub_Ansible/my_key.pem
+        dest: /home/ubuntu/my_key.pem
+        mode: '0600'
+    
+
+    - name: Install Ansible
+      ansible.builtin.apt:
+        name: ansible
+        state: latest
+      become: yes
+
+    - name: Copy inventory to EC2
+      ansible.builtin.copy:
+        src: ~/semi_final_project/AWS-LB-Terraform/priv_Ansible1/inventory
+        dest: /home/ubuntu/inventory
+        mode: '0644'
+        
+    - name: Copy ansible.cfg to EC2
+      ansible.builtin.copy:
+        src: ~/semi_final_project/AWS-LB-Terraform/priv_Ansible1/ansible.cfg
+        dest: /home/ubuntu/ansible.cfg
+        mode: '0644'
+
+    - name: Copy private playbook.yaml to EC2
+      ansible.builtin.copy:
+        src: ~/semi_final_project/AWS-LB-Terraform/priv_Ansible1/private_playbook.yaml
+        dest: /home/ubuntu/private_playbook.yaml
+        mode: '0644'
+
+    - name: copy docker installation script      
+      ansible.builtin.copy:
+        src: ~/semi_final_project/AWS-LB-Terraform/priv_Ansible1/docker.sh
+        dest: /home/ubuntu/docker.sh
+        mode: '0644'       
+                
+    - name: Run ansible-playbook with inventory.1
+      command: " ansible-playbook private_playbook.yaml "       
+
+  
